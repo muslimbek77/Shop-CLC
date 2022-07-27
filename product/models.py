@@ -10,7 +10,7 @@ class Category(BaseModel):
     title = models.CharField(max_length=256)
     slug = models.CharField(max_length=256)
     icon = models.FileField(upload_to="category/", null=True, blank=True)
-    parent = models.ForeignKey("self", null=True, blank=True)
+    parent = models.ForeignKey("self", null=True, blank=True,on_delete=models.CASCADE,)
 
 
 class Product(BaseModel):
@@ -39,20 +39,33 @@ class Product(BaseModel):
         self.image = main_image
         self.save()
 
+class Option(BaseModel):
+    title = models.CharField(max_length=200)
+    category =models.ForeignKey(Category,on_delete=models.CASCADE)
 
+class OptionValue(BaseModel):
+    title = models.CharField(max_length=200)
+    option = models.ForeignKey(Option,on_delete=models.CASCADE)
+    
 class ProductImage(BaseModel):
     product = models.ForeignKey(
         Product, related_name="images", on_delete=models.CASCADE)
     image = models.ImageField(upload_to="product_image/")
     is_main = models.BooleanField(default=False)
+    
+    options = models.ManyToManyField(OptionValue)
 
 
 class Comment(BaseModel):
-    product = models.ForeignKey(Product, related_name="comments")
+    product = models.ForeignKey(Product,related_name="comments",on_delete=models.CASCADE )
     user = models.ForeignKey(
-        User, related_name="comments", on_delete=models.CASCADE)
+        User, related_name="comments",on_delete=models.CASCADE)
     rate = models.IntegerField(default=0)
     content = models.TextField()
+
+
+
+
 
 # SIGNAL
 # comment count, rate.
