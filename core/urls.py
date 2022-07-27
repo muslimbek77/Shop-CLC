@@ -28,7 +28,10 @@ urlpatterns = [
         name="ckeditor_browse",
     ),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('product/', include('product.urls')),
+
     path('admin/', admin.site.urls),
+     path('__debug__/', include('debug_toolbar.urls')),
 ]
 
 # MEDIA URLS

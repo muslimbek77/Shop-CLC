@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+from django.utils.translation import gettext
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,12 +41,18 @@ INSTALLED_APPS = [
 
     'ckeditor',
     'ckeditor_uploader',
+    'rest_framework',
 
     'common',
-    'product'
+    'product',
+    'order',
+    'modeltranslation',
+    "debug_toolbar",
+
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -53,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -72,6 +80,16 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = dict(
+    SERIALIZER_EXTENSIONS=dict(
+        AUTO_OPTIMIZE=True
+    )
+)
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100
+}
 
 WSGI_APPLICATION = 'core.wsgi.application'
 AUTH_USER_MODEL = "common.user"
@@ -177,6 +195,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
+gettext = lambda s: s
+LANGUAGES = (
+    ('en',gettext('English')),
+    ('ru', gettext('Russian')),
+)
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 
 try:
     from .local_settings import *  # noqa

@@ -1,20 +1,21 @@
-from re import T
 from django.db import models
 from helpers.models import BaseModel
 # Create your models here.
 from ckeditor_uploader.fields import RichTextUploadingField
 from common.models import User
+from django.utils.translation import gettext as _
+
 
 
 class Category(BaseModel):
-    title = models.CharField(max_length=256)
+    title = models.CharField(help_text=_('This is the help text'),max_length=256)
     slug = models.CharField(max_length=256)
     icon = models.FileField(upload_to="category/", null=True, blank=True)
     parent = models.ForeignKey("self", null=True, blank=True,on_delete=models.CASCADE,)
 
 
 class Product(BaseModel):
-    title = models.CharField(max_length=256)
+    title = models.CharField(help_text=_('This is the help text'),max_length=256)
     slug = models.CharField(max_length=256)
     content = RichTextUploadingField()
     image = models.ImageField(
